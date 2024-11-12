@@ -1,24 +1,24 @@
-import streamlit as st
-import json
 import firebase_admin
 from firebase_admin import credentials, firestore
+import json
+import streamlit as st
 
-# Cargar las credenciales desde los secrets de Streamlit
-firebase_credentials = st.secrets["general"]["FIREBASE_CREDENTIALS"]
+# Cargar credenciales desde Streamlit Secrets
+firebase_credentials = st.secrets["FIREBASE_CREDENTIALS"]
 
-# Imprimir una parte de las credenciales para verificar su carga
 try:
+    # Decodificar el JSON de las credenciales
     cred_dict = json.loads(firebase_credentials)
-    st.write("Las credenciales se cargaron correctamente.")
-except json.JSONDecodeError as e:
-    st.error("Error al decodificar el JSON de las credenciales.")
-    st.stop()
-
-# Inicializar la app de Firebase si aún no se ha hecho
-if not firebase_admin._apps:
     cred = credentials.Certificate(cred_dict)
-    firebase_admin.initialize_app(cred)
-
-# Crea el cliente de Firestore
-db = firestore.client()
-
+    
+    # Inicializar Firebase si no está inicializado
+    if not firebase_admin._apps:
+        firebase_admin.initialize_app(cred)
+        
+    # Inicializar Firestore
+    db = firestore.client()
+    st.write("Firebase se ha inicializado correctamente.")
+except json.JSONDecodeError:
+    st.error("Error al decodificar el JSON de las credenciales. Revisa el formato del JSON.")
+except ValueError as e:
+    st.error(f"Error al inicializar las credenciales de Firebase: {e}")
