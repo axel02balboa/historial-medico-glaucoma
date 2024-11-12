@@ -17,8 +17,8 @@ try:
         
     # Inicializar Firestore
     db = firestore.client()
-    st.write("Firebase se ha inicializado correctamente.")
 except json.JSONDecodeError:
     st.error("Error al decodificar el JSON de las credenciales. Revisa el formato del JSON.")
 except ValueError as e:
     st.error(f"Error al inicializar las credenciales de Firebase: {e}")
+
